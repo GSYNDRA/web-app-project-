@@ -3,21 +3,19 @@ import * as service from "../services/authServices.js";
 
 export default class AuthController {
   static async signup(req, res) {
-    const { role_id, name, phone_number, email, password, other, relationship} = req.body;
+    const { role_id, email, password, name, quantity} = req.body;
     const { error, data, status } = await service.signupService(
       role_id,
-      name,
-      phone_number,
       email,
       password,
-      other,
-      relationship
+      name,
+      quantity,
     );
 
     if (error) {
       return responseData(res, error, "", status);
     }
-    return responseData(res, "success", data, status);
+    return responseData(res, "creating the account successfully", data, status);
   }
 
   static async login(req, res) {
@@ -30,23 +28,5 @@ export default class AuthController {
     return responseData(res, "Login successfully", data, status);
   }
 
-  static async logout(req, res) {
-    const { token } = req.headers;
-    const { error, message, status } = await service.logoutService(token);
 
-    if (error) {
-      return responseData(res, error, "", status);
-    }
-    return responseData(res, message, "", status);
-  }
-
-  static async refreshToken(req, res) {
-    const { token } = req.headers;
-    const { error, data, status } = await service.refreshTokenService(token);
-
-    if (error) {
-      return responseData(res, error, "", status);
-    }
-    return responseData(res, "", data, status);
-  }
 }

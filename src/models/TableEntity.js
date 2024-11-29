@@ -26,7 +26,7 @@ export default class TableEntity extends Model {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    Status: {
+    status: {
       type: DataTypes.BOOLEAN,
       allowNull: false
     }

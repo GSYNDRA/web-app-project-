@@ -3,10 +3,11 @@ import TableController from '../controllers/tableController.js';
 
 const router = express.Router();
 
-router.post('/v1/customers', TableController.signup);
-router.post('/v1/menu/choose', TableController.signup);
-router.put('/v1/menu/choose', TableController.login);
-router.post('/v1/orders/checkout', TableController.logout);
-router.get('/v1/menu-item', TableController.logout);
+router.post('/v1/:tableID/customers', TableController.registerCustomer);
+router.get('/v1/menu/:customerID/choose', TableController.getChosenItems);
+router.post('/v1/menu/:customerID/choose', TableController.chooseMenuItems);
+router.put('/v1/menu/:customerID/choose', TableController.editChosenItems);
+router.post('/v1/orders/:customerID/checkout', TableController.checkoutBill);
+router.get('/v1/menu-item', TableController.showMenuItems);
 
 export default router;
