@@ -28,6 +28,8 @@ import {
   decodeToken,
 } from "../config/jwt.js";
 import Joi from "joi";
+import { Sequelize } from "sequelize";
+let Op = Sequelize.Op;
 
 let model = initModels(sequelize);
 
@@ -347,3 +349,70 @@ export const editStatusOfMenuItemsService = async (
         return { error: "Error editing menu items ", status: 500 };
     }
   };
+  
+
+  export const getDailyRevenueService = async (
+    date
+  ) => {
+    try {
+       
+    if (!date) {
+      return { error: 'Date is required in the request body.', status: 400 };  
+
+    }
+
+    // Format the date for filtering (start and end of the day)
+    const startDate = new Date(date);
+    startDate.setHours(0, 0, 0, 0); // Set to start of the day
+
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999); // Set to end of the day
+
+    // Fetch total revenue for the given date
+    const totalRevenue = await model.Transaction.sum('totalPrice', {
+      where: {
+        date: {
+          [Op.between]: [startDate, endDate],
+        },
+      },
+    });
+
+    return { data: {
+      date: date,
+      totalRevenue: totalRevenue || 0, // Return 0 if no transactions found
+    }, status: 200 };  
+    } catch (err) {
+        console.error(err);
+        return { error: "Failed to fetch daily revenue.", status: 500 };
+    }
+  };
+  export const listTablesService = async (
+    quantity 
+  ) => {
+    try {
+     
+    // Build where conditions dynamically
+    const whereCondition = quantity ? { quantity } : {};
+
+    // Fetch tables grouped by status
+    const vacantTables = await model.TableEntity.findAll({
+      where: { ...whereCondition, Status: 0 }, // Status 0: Vacant
+      attributes: ['tableID', 'tableName', 'quantity'], // Only return required fields
+    });
+
+    const ongoingTables = await model.TableEntity.findAll({
+      where: { ...whereCondition, Status: 1 }, // Status 1: Ongoing
+      attributes: ['tableID', 'tableName', 'quantity'], // Only return required fields
+    });
+
+    // Combine the results into a grouped response
+    return { data: {
+      vacant: vacantTables,
+      ongoing: ongoingTables,
+    }, status: 200 };  
+    } catch (err) {
+        console.error(err);
+        return { error: "Failed to fetch tables by status and quantity.", status: 500 };
+    }
+  };
+  

@@ -70,4 +70,25 @@ export default class AdminController {
     }
     return responseData(res, "", data, status);
   }
+  
+  
+  static async getDailyRevenue(req, res) {
+    const { date } = req.body;
+    const { error, data, status } = await service.getDailyRevenueService(date);
+
+    if (error) {
+      return responseData(res, error, "", status);
+    }
+    return responseData(res, "successful", data, status);
+  }
+  static async listTables(req, res) {
+    const { quantity  } = req.body;
+    const { error, data, status } = await service.listTablesService(quantity);
+
+    if (error) {
+      return responseData(res, error, "", status);
+    }
+    return responseData(res, "successful", data, status);
+  }
+  
 }

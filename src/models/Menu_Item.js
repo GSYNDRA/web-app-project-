@@ -33,6 +33,10 @@ export default class Menu_Item extends Model {
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: false
+    },
+    image: {
+      type: DataTypes.TEXT,
+      allowNull: true
     }
   }, {
     sequelize,
