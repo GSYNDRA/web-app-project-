@@ -416,3 +416,53 @@ export const editStatusOfMenuItemsService = async (
     }
   };
   
+  export const editMenuService = async (itemID, itemName, type_of_food, price, descriptions, preparation_time) => {
+    try {
+
+      // Check if the item exists
+      const menuItem = await model.Menu_Item.findByPk(itemID);
+      if (!menuItem) {
+        return { error: `Menu item with ID ${itemID} not found`, data: null, status: 404 };
+      }
+  
+      // Update the menu item
+      await menuItem.update({
+        itemName: itemName || menuItem.itemName, // Retain the old value if not provided
+        type_of_food: type_of_food || menuItem.type_of_food,
+        price: price !== undefined ? price : menuItem.price, // Check against undefined for numeric fields
+        descriptions: descriptions || menuItem.descriptions,
+        preparation_time: preparation_time !== undefined ? preparation_time : menuItem.preparation_time,
+      });
+  
+      return { data: menuItem, status: 200 };
+    } catch (error) {
+      console.error('Error updating menu item:', error);
+      return { error: 'Internal Server Error', status: 500 };
+    }
+  };
+
+  export const addNewFoodService = async (itemName, type_of_food, price, descriptions, preparation_time, image) => {
+    try {
+   
+      // Validate input (you can expand this based on your requirements)
+      if (!itemName || price === undefined || preparation_time === undefined) {
+        return { error: 'Missing required fields', data: null, status: 400 };
+      }
+  
+      // Create the new food item in the Menu_Item table
+      const newFoodItem = await model.Menu_Item.create({
+        itemName,
+        type_of_food: type_of_food || null, // Optional field
+        price,
+        descriptions: descriptions || null, // Optional field
+        preparation_time,
+        image,
+        status: true,
+      });
+  
+      return { error: null, data: newFoodItem, status: 201 };
+    } catch (error) {
+      console.error('Error adding new food item:', error);
+      return { error: 'Internal Server Error', data: null, status: 500 };
+    }
+  };

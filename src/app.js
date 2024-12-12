@@ -1,11 +1,13 @@
 import express from 'express';
 import sequelize from './config/database.js';
 import router from './routes/rootRoutes.js';
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 // Use the routes defined in the routes folder
