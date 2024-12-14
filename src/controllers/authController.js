@@ -19,8 +19,8 @@ export default class AuthController {
   }
 
   static async login(req, res) {
-    const { email, password } = req.body;
-    const { error, data, status } = await service.loginService(email, password);
+    const { email, password ,role_id } = req.body;
+    const { error, data, status } = await service.loginService(email, password, role_id);
 
     if (error) {
       return responseData(res, error, "", status);

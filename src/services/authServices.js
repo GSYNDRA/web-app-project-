@@ -38,27 +38,27 @@ export const signupService = async (
     let roleDetails = null;
 
     switch (role_id) {
-      case 1: // Table 
+      case 1: // Table
         const table = await model.TableEntity.create({
           userID: newUser.userID,
           tableName: name,
           quantity: quantity,
-          status: 0, 
+          status: 0,
         });
         roleDetails = {
           role: "Table",
           tableName: table.tableName,
-          quantity: table.quantity
+          quantity: table.quantity,
         };
         break;
       case 2: // Admin
         const admin = await model.Admin.create({
           userID: newUser.userID,
-          adminName: name
+          adminName: name,
         });
         roleDetails = {
           role: "Admin",
-          adminName: admin.adminName
+          adminName: admin.adminName,
         };
         break;
     }
@@ -68,9 +68,9 @@ export const signupService = async (
         userID: newUser.userID,
         roleID: newUser.roleID,
         email: newUser.email,
-        role_details: roleDetails
+        role_details: roleDetails,
       },
-      status: 200
+      status: 200,
     };
   } catch (error) {
     console.error(error);
@@ -78,10 +78,7 @@ export const signupService = async (
   }
 };
 
-
-
 export const loginService = async (email, password) => {
-
   // const schema = Joi.object({
   //   email: Joi.string().email().required().messages({
   //     "string.email": "Invalid email format",
@@ -108,23 +105,21 @@ export const loginService = async (email, password) => {
       return { error: "Incorrect email or password", status: 400 };
     }
 
-
     if (check_user && bcrypt.compareSync(password, check_user.password)) {
-      if(check_user.roleID == 1){
+      if (check_user.roleID == 1) {
         let table = await model.TableEntity.findOne({
-          where: { userID: check_user.userID},
+          where: { userID: check_user.userID },
         });
-        let token = { 
+        let token = {
           userID: check_user.userID,
-          tableID: table.tableID
-         };
-         return { data: token, status: 200 };
-      }
-      else{
-        let token = { userID: check_user.userID };
+          tableID: table.tableID,
+          roleID: check_user.roleID,
+        };
+        return { data: token, status: 200 };
+      } else {
+        let token = { userID: check_user.userID, roleID: check_user.roleID };
         return { data: token, status: 200 };
       }
- 
     } else {
       return { error: "Incorrect email or password", status: 400 };
     }
@@ -133,5 +128,3 @@ export const loginService = async (email, password) => {
     return { error: "Error logging in", status: 500 };
   }
 };
-
-
