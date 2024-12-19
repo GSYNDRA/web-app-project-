@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 // Use the routes defined in the routes folder
-app.use('/', router);
+app.use('/', rSouter);
 
 // Test the database connection
 sequelize.authenticate()
