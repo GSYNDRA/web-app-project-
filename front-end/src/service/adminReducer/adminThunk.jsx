@@ -43,3 +43,15 @@ export const putEditMenuItem = createAsyncThunk(
     }
   }
 );
+export const postNewItem = createAsyncThunk(
+  "adminThunk/postNewItem",
+  async (payload) => {
+    try {
+      const data = await adminService.postNewItem(payload);
+
+      return data.data.content;
+    } catch (error) {
+      message.error(error);
+    }
+  }
+);

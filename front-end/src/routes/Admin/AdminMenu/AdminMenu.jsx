@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getMenuThunk } from "../../../service/userReducer/userThunk";
 import { Tabs, Typography, Input, Table, Modal, Select } from "antd";
-import { putEditMenuItem } from "../../../service/adminReducer/adminThunk";
+import {
+  postNewItem,
+  putEditMenuItem,
+} from "../../../service/adminReducer/adminThunk";
+// import { putEditMenuItem } from "../../../service/adminReducer/adminThunk";
 
 const AdminMenu = () => {
   const [activeTab, setActiveTab] = useState("Appetizers");
@@ -10,6 +14,18 @@ const AdminMenu = () => {
   const [list, setList] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // State for "Add Menu Item" form
+  const [formValues, setFormValues] = useState({
+    itemName: "",
+    type_of_food: "",
+    price: "",
+    descriptions: "",
+    preparation_time: "",
+  });
+
+  // State for "Edit Menu Item" modal form
+  const [editFormValues, setEditFormValues] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -73,27 +89,70 @@ const AdminMenu = () => {
     },
   ];
 
+  // Add Menu Item form handlers
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (value) => {
+    setFormValues((prev) => ({ ...prev, type_of_food: value }));
+  };
+
+  const handleDiscardChanges = () => {
+    setFormValues({
+      itemName: "",
+      type_of_food: "",
+      price: "",
+      descriptions: "",
+      preparation_time: "",
+    });
+  };
+
+  const handleSaveChanges = () => {
+    const newItem = {
+      itemName: formValues.itemName,
+      type_of_food: formValues.type_of_food,
+      price: parseFloat(formValues.price),
+      descriptions: formValues.descriptions,
+      preparation_time: parseInt(formValues.preparation_time, 10),
+    };
+
+    dispatch(postNewItem(newItem));
+  };
+
+  // Edit Menu Item modal handlers
   const handleEdit = (item) => {
-    setSelectedItem({ ...item });
+    setSelectedItem(item);
+    setEditFormValues({ ...item });
     setIsModalVisible(true);
   };
 
-  const handleModalInputChange = (e) => {
+  const handleEditModalChange = (e) => {
     const { name, value } = e.target;
-    setSelectedItem((prev) => ({ ...prev, [name]: value }));
+    setEditFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    console.log("Updated Item: ", selectedItem);
+  const handleEditModalSave = () => {
+    console.log("Updated Item: ", {
+      ...editFormValues,
+      price: parseFloat(editFormValues.price),
+      preparation_time: parseInt(editFormValues.preparation_time, 10),
+    });
     setIsModalVisible(false);
 
-    dispatch(putEditMenuItem(selectedItem))
-      .then(() => {
-        window.location.reload();
+    dispatch(
+      putEditMenuItem({
+        ...editFormValues,
+        price: parseFloat(editFormValues.price),
+        preparation_time: parseInt(editFormValues.preparation_time, 10),
       })
-      .catch((err) => {
-        console.log(err);
-      });
+    );
+  };
+
+  const handleEditModalDiscard = () => {
+    setEditFormValues(selectedItem);
+    setIsModalVisible(false);
   };
 
   return (
@@ -119,12 +178,6 @@ const AdminMenu = () => {
                   </span>
                 }
               >
-                <div className="flex justify-between">
-                  <Typography.Text className="text-2xl text-black font-serif font-semibold">
-                    Choose Dish
-                  </Typography.Text>
-                </div>
-
                 <Table dataSource={list} columns={columns} rowKey="itemID" />
               </Tabs.TabPane>
             ))}
@@ -137,25 +190,35 @@ const AdminMenu = () => {
           >
             Add Menu Item
           </Typography.Text>
-          <div className="flex justify-center mb-6"></div>
           <Input
             placeholder="Enter food name"
             name="itemName"
+            value={formValues.itemName}
+            onChange={handleInputChange}
             className="mb-4 p-5"
           />
           <div className="flex space-x-4">
             <Input
               placeholder="Enter food price"
               name="price"
+              value={formValues.price}
+              onChange={handleInputChange}
               className="mb-4 p-5"
             />
             <Input
               placeholder="Enter served time"
               name="preparation_time"
+              value={formValues.preparation_time}
+              onChange={handleInputChange}
               className="mb-4 p-5"
             />
           </div>
-          <Select placeholder="Choose food type" className="mb-4 w-full">
+          <Select
+            placeholder="Choose food type"
+            value={formValues.type_of_food}
+            onChange={handleSelectChange}
+            className="mb-4 w-full"
+          >
             {tabList.map((tab) => (
               <Select.Option key={tab.key} value={tab.key}>
                 {tab.tab}
@@ -164,58 +227,80 @@ const AdminMenu = () => {
           </Select>
           <Input.TextArea
             placeholder="Enter food description"
-            name="description"
+            name="descriptions"
+            value={formValues.descriptions}
+            onChange={handleInputChange}
             className="mb-4 p-5"
           />
-
           <div className="flex justify-between">
-            <button className="px-6 py-2 text-[#EA7C69] bg-white border-[#EA7C69] border rounded-lg font-semibold">
+            <button
+              className="px-6 py-2 text-[#EA7C69] bg-white border-[#EA7C69] border rounded-lg font-semibold"
+              onClick={handleDiscardChanges}
+            >
               Discard Changes
             </button>
-            <button className="px-6 py-2 bg-[#EA7C69] text-white rounded-lg font-semibold">
+            <button
+              className="px-6 py-2 bg-[#EA7C69] text-white rounded-lg font-semibold"
+              onClick={handleSaveChanges}
+            >
               Save Changes
             </button>
           </div>
         </div>
       </div>
 
-      {/* Modal for viewing/editing */}
+      {/* Modal for editing */}
       <Modal
-        title="View / Edit Item"
+        title="Edit Menu Item"
         visible={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
-        onOk={handleSave}
+        footer={null}
       >
-        {selectedItem && (
+        {editFormValues && (
           <>
             <Input
               name="itemName"
-              value={selectedItem.itemName}
+              value={editFormValues.itemName}
               addonBefore="Item Name"
-              onChange={handleModalInputChange}
+              onChange={handleEditModalChange}
               className="mb-2"
             />
             <Input
               name="price"
-              value={selectedItem.price}
+              value={editFormValues.price}
               addonBefore="Price ($)"
-              onChange={handleModalInputChange}
+              onChange={handleEditModalChange}
               className="mb-2"
             />
             <Input
               name="preparation_time"
-              value={selectedItem.preparation_time}
+              value={editFormValues.preparation_time}
               addonBefore="Preparation Time (mins)"
-              onChange={handleModalInputChange}
+              onChange={handleEditModalChange}
               className="mb-2"
             />
             <Input.TextArea
               name="descriptions"
-              value={selectedItem.descriptions}
+              value={editFormValues.descriptions}
               addonBefore="Descriptions"
-              onChange={handleModalInputChange}
+              onChange={handleEditModalChange}
               rows={4}
+              className="mb-2"
             />
+            <div className="flex justify-between">
+              <button
+                className="px-6 py-2 text-[#EA7C69] bg-white border-[#EA7C69] border rounded-lg font-semibold"
+                onClick={handleEditModalDiscard}
+              >
+                Discard Changes
+              </button>
+              <button
+                className="px-6 py-2 bg-[#EA7C69] text-white rounded-lg font-semibold"
+                onClick={handleEditModalSave}
+              >
+                Save Changes
+              </button>
+            </div>
           </>
         )}
       </Modal>
