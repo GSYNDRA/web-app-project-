@@ -16,8 +16,11 @@ export const adminService = {
     let url = `/admin/v1/edit_menu`;
     return http.put(url, data);
   },
+<<<<<<< Updated upstream
   postNewItem: (data) => {
     let url = `/admin/v1/new_dish`;
     return http.post(url, data);
   },
+=======
+>>>>>>> Stashed changes
 };

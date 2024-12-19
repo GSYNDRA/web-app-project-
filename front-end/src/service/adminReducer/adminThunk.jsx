@@ -43,6 +43,7 @@ export const putEditMenuItem = createAsyncThunk(
     }
   }
 );
+<<<<<<< Updated upstream
 export const postNewItem = createAsyncThunk(
   "adminThunk/postNewItem",
   async (payload) => {
@@ -55,3 +56,5 @@ export const postNewItem = createAsyncThunk(
     }
   }
 );
+=======
+>>>>>>> Stashed changes
