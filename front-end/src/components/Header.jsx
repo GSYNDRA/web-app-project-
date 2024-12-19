@@ -1,13 +1,14 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import bgMenu from "../assets/bgMenu.png";
 import bgAboutContact from "../assets/bgAboutContact.png";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logoutAction } from "../service/userReducer/userReducer";
 import { message } from "antd";
+import { userLocal } from "../service/userLocal";
 
 const Header = () => {
   const path = useLocation().pathname;
-  const { roleID } = useSelector((state) => state.userReducer);
+  const userRole = userLocal.getRoleName();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,8 +27,7 @@ const Header = () => {
   const isUser = path.startsWith("/user");
   const isHome = path === "/user/home";
   const isAboutOrContact = path === "/user/about" || path === "/user/contact";
-  // const isAdmin = path.startsWith("/admin");
-  const isAdmin = roleID == 2 ? true : false;
+  const isAdmin = userRole == "admin" ? true : false;
 
   const bgStyle =
     isUser && isHome ? "bg-black" : isUser ? "bg-cover bg-center" : "bg-none";

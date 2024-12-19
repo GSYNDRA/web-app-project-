@@ -17,11 +17,12 @@ const userReducer = createSlice({
   name: "userReducer",
   initialState,
   reducers: {
+    // eslint-disable-next-line no-unused-vars
     logoutAction: (state) => {
-      state.userID = 0;
-      state.tableID = 0;
-      userLocal.delete();
-      cartLocal.deleteAll();
+      // state.userID = 0;
+      // state.tableID = 0;
+      // userLocal.delete();
+      // cartLocal.deleteAll();
     },
     updateCart: (state) => {
       state.cart = [...cartLocal.get()];
@@ -37,16 +38,24 @@ const userReducer = createSlice({
       })
       .addCase(postLogin.fulfilled, (state, action) => {
         state.userID = action.payload.userID;
-        state.tableID = action.payload.tableID;
+        state.tableID =
+          action.payload.tableID !== null ? action.payload.tableID : 1;
         state.roleID = action.payload.roleID;
 
+        if (
+          action.payload.customerID !== null &&
+          action.payload.customerID !== undefined
+        ) {
+          state.customerID = action.payload.customerID;
+        }
+
         userLocal.setUserID(action.payload.userID);
-        userLocal.setTableID(action.payload.tableID);
+        userLocal.setTableID(action.payload.tableID || 1);
         userLocal.setRoleName(action.payload.roleID);
       })
       .addCase(registerTable.fulfilled, (state, action) => {
-        userLocal.setCustomerID(action.payload);
-        state.customerID = action.payload;
+        userLocal.setCustomerID(action.payload !== null ? action.payload : 1);
+        state.customerID = action.payload !== null ? action.payload : 1;
       });
   },
 });

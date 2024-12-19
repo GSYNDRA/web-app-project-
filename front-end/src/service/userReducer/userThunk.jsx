@@ -59,3 +59,15 @@ export const chooseListItem = createAsyncThunk(
     }
   }
 );
+
+export const postCheckout = createAsyncThunk(
+  "userReducer/checkout",
+  async (payload) => {
+    try {
+      const data = await userService.postCheckout(payload);
+      return data.data.content;
+    } catch (error) {
+      message.success(error);
+    }
+  }
+);

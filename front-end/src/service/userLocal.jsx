@@ -73,5 +73,7 @@ export const userLocal = {
     localStorage.removeItem("userRole");
     localStorage.removeItem("userID");
     localStorage.removeItem("tableID");
+    localStorage.removeItem("customerID");
+    localStorage.removeItem("onGoingTable");
   },
 };

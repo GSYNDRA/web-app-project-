@@ -1,4 +1,4 @@
-import { Divider, Input, Modal, Typography } from "antd";
+import { Divider, Input, message, Modal, Typography } from "antd";
 import bg from "../../../assets/checkoutbg.png";
 import { userLocal } from "../../../service/userLocal";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +9,10 @@ import {
   updateCart,
   updateCheckout,
 } from "../../../service/userReducer/userReducer";
-import { chooseListItem } from "../../../service/userReducer/userThunk";
+import {
+  chooseListItem,
+  postCheckout,
+} from "../../../service/userReducer/userThunk";
 
 const Checkout = () => {
   const tabeID = userLocal.getTableID();
@@ -56,6 +59,7 @@ const Checkout = () => {
     };
 
     dispatch(chooseListItem(data));
+    dispatch(updateCheckout());
   };
   const checkoutBill = () => {
     // /v1/orders/:customerID/checkout
@@ -64,6 +68,21 @@ const Checkout = () => {
     alert("Thank you for your feedback!");
     setFeedback(""); // Clear the input
     setIsModalOpen(false);
+
+    const data = {
+      payment_method: "Card",
+      feedback: feedback,
+    };
+
+    dispatch(postCheckout({ data, customerID }))
+      .then(() => {
+        message.success("Checkout Success");
+        navigate("/auth/login");
+        userLocal.delete();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {

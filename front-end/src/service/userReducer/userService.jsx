@@ -24,4 +24,13 @@ export const userService = {
     let url = `/table/v1/menu/${customerID}/choose`;
     return http.post(url, items);
   },
+
+  postCheckout: (data) => {
+    const fb = {
+      feedback: data.data.feedback,
+      payment_method: "Card",
+    };
+    let url = `/table/v1/orders/${data.customerID}/checkout`;
+    return http.post(url, fb);
+  },
 };
