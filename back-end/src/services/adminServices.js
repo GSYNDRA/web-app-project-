@@ -242,6 +242,7 @@ export const editStatusOfMenuItemsService = async (
             },
           ],
         });
+        console.log(JSON.stringify(chooseData, null, 2)); // Debugging output
 
         // Format data for each table
         results.push({
@@ -251,12 +252,12 @@ export const editStatusOfMenuItemsService = async (
           chooseItems: chooseData.map((item) => ({
             chooseID: item.chooseID,
             itemID: item.itemID,
-            itemName: item.menuItem?.itemName || null,
-            quantity: item.quantity,
+            itemName: item.item?.itemName || null,
+            quantity: item.item?.price,
             note: item.note || null,
             price: item.price,
             status: item.status,
-            preparation_time: item.menuItem?.preparation_time || null,
+            preparation_time: item.item?.preparation_time || null,
           })),
         });
       }
