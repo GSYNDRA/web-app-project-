@@ -1,4 +1,4 @@
-import { Divider, Input, message, Modal, Typography } from "antd";
+import { Divider, Input, Modal, Typography } from "antd";
 import bg from "../../../assets/checkoutbg.png";
 import { userLocal } from "../../../service/userLocal";
 import { useDispatch, useSelector } from "react-redux";
@@ -62,9 +62,6 @@ const Checkout = () => {
     dispatch(updateCheckout());
   };
   const checkoutBill = () => {
-    // /v1/orders/:customerID/checkout
-
-    console.log("Feedback submitted:", feedback);
     alert("Thank you for your feedback!");
     setFeedback(""); // Clear the input
     setIsModalOpen(false);
@@ -76,9 +73,8 @@ const Checkout = () => {
 
     dispatch(postCheckout({ data, customerID }))
       .then(() => {
-        message.success("Checkout Success");
         navigate("/auth/login");
-        userLocal.delete();
+        // userLocal.delete();
       })
       .catch((err) => {
         console.log(err);

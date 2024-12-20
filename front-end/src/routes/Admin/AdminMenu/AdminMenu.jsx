@@ -2,15 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getMenuThunk } from "../../../service/userReducer/userThunk";
 import { Tabs, Typography, Input, Table, Modal, Select } from "antd";
-<<<<<<< Updated upstream
 import {
   postNewItem,
   putEditMenuItem,
 } from "../../../service/adminReducer/adminThunk";
 // import { putEditMenuItem } from "../../../service/adminReducer/adminThunk";
-=======
-import { putEditMenuItem } from "../../../service/adminReducer/adminThunk";
->>>>>>> Stashed changes
 
 const AdminMenu = () => {
   const [activeTab, setActiveTab] = useState("Appetizers");
@@ -18,7 +14,6 @@ const AdminMenu = () => {
   const [list, setList] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-<<<<<<< Updated upstream
 
   // State for "Add Menu Item" form
   const [formValues, setFormValues] = useState({
@@ -31,8 +26,6 @@ const AdminMenu = () => {
 
   // State for "Edit Menu Item" modal form
   const [editFormValues, setEditFormValues] = useState(null);
-=======
->>>>>>> Stashed changes
 
   const dispatch = useDispatch();
 
@@ -96,7 +89,6 @@ const AdminMenu = () => {
     },
   ];
 
-<<<<<<< Updated upstream
   // Add Menu Item form handlers
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -161,29 +153,6 @@ const AdminMenu = () => {
   const handleEditModalDiscard = () => {
     setEditFormValues(selectedItem);
     setIsModalVisible(false);
-=======
-  const handleEdit = (item) => {
-    setSelectedItem({ ...item });
-    setIsModalVisible(true);
-  };
-
-  const handleModalInputChange = (e) => {
-    const { name, value } = e.target;
-    setSelectedItem((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = () => {
-    console.log("Updated Item: ", selectedItem);
-    setIsModalVisible(false);
-
-    dispatch(putEditMenuItem(selectedItem))
-      .then(() => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
->>>>>>> Stashed changes
   };
 
   return (
@@ -209,15 +178,6 @@ const AdminMenu = () => {
                   </span>
                 }
               >
-<<<<<<< Updated upstream
-=======
-                <div className="flex justify-between">
-                  <Typography.Text className="text-2xl text-black font-serif font-semibold">
-                    Choose Dish
-                  </Typography.Text>
-                </div>
-
->>>>>>> Stashed changes
                 <Table dataSource={list} columns={columns} rowKey="itemID" />
               </Tabs.TabPane>
             ))}
@@ -230,35 +190,24 @@ const AdminMenu = () => {
           >
             Add Menu Item
           </Typography.Text>
-<<<<<<< Updated upstream
           <Input
             placeholder="Enter food name"
             name="itemName"
             value={formValues.itemName}
             onChange={handleInputChange}
-=======
-          <div className="flex justify-center mb-6"></div>
-          <Input
-            placeholder="Enter food name"
-            name="itemName"
->>>>>>> Stashed changes
             className="mb-4 p-5"
           />
           <div className="flex space-x-4">
             <Input
               placeholder="Enter food price"
               name="price"
-<<<<<<< Updated upstream
               value={formValues.price}
               onChange={handleInputChange}
-=======
->>>>>>> Stashed changes
               className="mb-4 p-5"
             />
             <Input
               placeholder="Enter served time"
               name="preparation_time"
-<<<<<<< Updated upstream
               value={formValues.preparation_time}
               onChange={handleInputChange}
               className="mb-4 p-5"
@@ -270,12 +219,6 @@ const AdminMenu = () => {
             onChange={handleSelectChange}
             className="mb-4 w-full"
           >
-=======
-              className="mb-4 p-5"
-            />
-          </div>
-          <Select placeholder="Choose food type" className="mb-4 w-full">
->>>>>>> Stashed changes
             {tabList.map((tab) => (
               <Select.Option key={tab.key} value={tab.key}>
                 {tab.tab}
@@ -284,7 +227,6 @@ const AdminMenu = () => {
           </Select>
           <Input.TextArea
             placeholder="Enter food description"
-<<<<<<< Updated upstream
             name="descriptions"
             value={formValues.descriptions}
             onChange={handleInputChange}
@@ -301,24 +243,12 @@ const AdminMenu = () => {
               className="px-6 py-2 bg-[#EA7C69] text-white rounded-lg font-semibold"
               onClick={handleSaveChanges}
             >
-=======
-            name="description"
-            className="mb-4 p-5"
-          />
-
-          <div className="flex justify-between">
-            <button className="px-6 py-2 text-[#EA7C69] bg-white border-[#EA7C69] border rounded-lg font-semibold">
-              Discard Changes
-            </button>
-            <button className="px-6 py-2 bg-[#EA7C69] text-white rounded-lg font-semibold">
->>>>>>> Stashed changes
               Save Changes
             </button>
           </div>
         </div>
       </div>
 
-<<<<<<< Updated upstream
       {/* Modal for editing */}
       <Modal
         title="Edit Menu Item"
@@ -333,53 +263,24 @@ const AdminMenu = () => {
               value={editFormValues.itemName}
               addonBefore="Item Name"
               onChange={handleEditModalChange}
-=======
-      {/* Modal for viewing/editing */}
-      <Modal
-        title="View / Edit Item"
-        visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        onOk={handleSave}
-      >
-        {selectedItem && (
-          <>
-            <Input
-              name="itemName"
-              value={selectedItem.itemName}
-              addonBefore="Item Name"
-              onChange={handleModalInputChange}
->>>>>>> Stashed changes
               className="mb-2"
             />
             <Input
               name="price"
-<<<<<<< Updated upstream
               value={editFormValues.price}
               addonBefore="Price ($)"
               onChange={handleEditModalChange}
-=======
-              value={selectedItem.price}
-              addonBefore="Price ($)"
-              onChange={handleModalInputChange}
->>>>>>> Stashed changes
               className="mb-2"
             />
             <Input
               name="preparation_time"
-<<<<<<< Updated upstream
               value={editFormValues.preparation_time}
               addonBefore="Preparation Time (mins)"
               onChange={handleEditModalChange}
-=======
-              value={selectedItem.preparation_time}
-              addonBefore="Preparation Time (mins)"
-              onChange={handleModalInputChange}
->>>>>>> Stashed changes
               className="mb-2"
             />
             <Input.TextArea
               name="descriptions"
-<<<<<<< Updated upstream
               value={editFormValues.descriptions}
               addonBefore="Descriptions"
               onChange={handleEditModalChange}
@@ -400,13 +301,6 @@ const AdminMenu = () => {
                 Save Changes
               </button>
             </div>
-=======
-              value={selectedItem.descriptions}
-              addonBefore="Descriptions"
-              onChange={handleModalInputChange}
-              rows={4}
-            />
->>>>>>> Stashed changes
           </>
         )}
       </Modal>

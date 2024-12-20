@@ -239,7 +239,7 @@ export const getItemsOfTablesService = async () => {
             chooseID: item.chooseID,
             itemID: item.itemID,
             itemName: item.item?.itemName || null,
-            quantity: item.item?.price,
+            quantity: item.quantity,
             note: item.note || null,
             price: item.item?.price,
             status: item.status,
